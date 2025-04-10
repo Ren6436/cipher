@@ -36,10 +36,26 @@ def transition_matrix(bigrams):
     tm /= tm.sum()
     return tm
 
+def transition_matrix_bez_nul_a_bez_normalizace(bigrams):
+    n = len(alphabet)
+    char_to_idx = {char: i for i, char in enumerate(alphabet)}
+    tm = np.zeros((n, n))
+
+    for bigram in bigrams:
+        if len(bigram) == 2:
+            c1, c2 = bigram
+            if c1 in char_to_idx and c2 in char_to_idx:
+                i = char_to_idx[c1]
+                j = char_to_idx[c2]
+                tm[i][j] += 1
+
+    # tm /= tm.sum()
+    return tm
+
 
 def plausibility(text, TM_ref):
     bigrams_obs = get_bigrams(text)
-    TM_obs = transition_matrix(bigrams_obs)
+    TM_obs = transition_matrix_bez_nul_a_bez_normalizace(bigrams_obs)
     return np.sum(TM_obs * np.log(TM_ref))
 
 
@@ -65,7 +81,10 @@ def prolom_substitute(text, TM_ref, iter, start_key=None):
 
         q = p_candidate / p_current if p_current != 0 else 0
 
-        if q > 1 or random.random() < 0.01:
+
+        # protoze proto!
+        if q < 1 or (random.random() < 0.001):
+            print("switched")
             current_key = candidate_key
             p_current = p_candidate
             decrypted_current = decrypted_candidate

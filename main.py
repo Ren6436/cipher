@@ -45,7 +45,7 @@ def download_krakatit(start_chapter=1, end_chapter=54, output_file="krakatit_cle
 
 if __name__ == "__main__":
 
-    download_krakatit()
+    # download_krakatit()
 
     with open("krakatit_cleaned.txt", "r", encoding="utf-8") as f:
         krakatit_text = f.read()
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     with open("text_250_sample_1_ciphertext.txt", "r", encoding="utf-8") as f:
         ciphered = f.read().strip()
 
-    found_key, cracked_text, score = prolom_substitute(ciphered, TM_ref, iter=50000)
+    found_key, cracked_text, score = prolom_substitute(ciphered, TM_ref, 20000)
 
     print("\n🔑 Recovered key:", found_key)
     print("📈 Plausibility score:", score)
